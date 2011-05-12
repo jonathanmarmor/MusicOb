@@ -17,9 +17,9 @@ style of publisher Éditions musique SISYPHE
 
 Requirements
 ------------
-Python 2.7 (http://python.org/)
-PyYaml (http://pyyaml.org/)
-LilyPond (http://lilypond.org/)
+- Python 2.7 (http://python.org/)
+- PyYaml (http://pyyaml.org/)
+- LilyPond (http://lilypond.org/)
 
 
 
