@@ -1,0 +1,69 @@
+- rehearsal_mark: A
+  bar: 1
+  time_signature_numerator: 4
+  time_signature_denominator: 4
+  pitches: "<d' >"
+  duration: 2
+  dynamic: f
+- pitches: "<a' >"
+  duration: 4
+- pitches: "<cis' >"
+  duration: 8
+  beam: start
+- pitches: "<dis' >"
+  duration: 8
+  beam: stop
+  slur: start
+- bar: 2
+  text_spanner_start: Acc
+  pitches: "<g' >"
+  duration: 2
+  articulations: ['|']
+- pitches: "<a' >"
+  duration: 4
+  slur: stop
+- pitches: "r"
+  duration: 4
+  text_spanner_stop: true
+  tempo_instruction: A tempo
+- bar: 3
+  pitches: R
+  duration: 1
+- bar: 4
+  pitches: "<bes' >"
+  duration: 2
+  articulations: ['_']
+- grace_notes:
+  - pitches: "<f' >"
+    duration: 16
+    articulations: ['+', '^']
+    beam: start
+    slur: start
+  - pitches: "<a' >"
+    duration: 16
+    beam: stop
+  pitches: "<g' >"
+  duration: 2
+  tie: True
+  articulations: ['>', '-']
+  slur: stop
+  text_below: 'Hello, from down under'
+  breathe: true
+- bar: 5
+  grace_notes:
+  - pitches: s
+    duration: 16
+  - pitches: s
+    duration: 16
+  - pitches: s
+    duration: 16
+  pitches: "<g' >"
+  duration: '2.'
+  slur: start
+  dynamic: mf
+- pitches: "<g'' >"
+  duration: 4
+  articulations: ['.']
+  slur: stop
+  fermata: true
+  text_above: 'Hi, from on high!'

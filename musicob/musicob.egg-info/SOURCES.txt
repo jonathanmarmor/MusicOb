@@ -1,0 +1,9 @@
+setup.cfg
+setup.py
+musicob/__init__.py
+musicob.egg-info/PKG-INFO
+musicob.egg-info/SOURCES.txt
+musicob.egg-info/dependency_links.txt
+musicob.egg-info/entry_points.txt
+musicob.egg-info/not-zip-safe
+musicob.egg-info/top_level.txt
