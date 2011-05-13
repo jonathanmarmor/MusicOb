@@ -223,3 +223,36 @@ instrument = """
 instrument_end = """
 				\\include "{path_to_music_file}"
 			}}"""
+
+
+rehearsal = """\\mark \\markup {{ \\override #\'(font-name . "Minion Semibold") \\override #\'(thickness . 0.01) \\override #'(box-padding . 0.4) \\box {{ "{rehearsal_text}" }} }}\n"""
+
+bar = '| %  ----------  {bar_number} ----------  {bar_number} ----------  {bar_number} ----------  {bar_number} ----------  {bar_number}\n'
+time_signature = '\\time {numerator}/{denominator}\n'
+text_spanner_init = """\\override TextSpanner #\'staff-padding = #3.0 \\override TextSpanner #\'(bound-details left text) = \\markup {{ \\override #\'(font-name . "Minion Italic") {{ "{text_spanner_text}" }} }}\n"""
+
+tempo_instruction_init = """\\override TextScript #\'staff-padding = #3.0\n"""
+grace_notes_init = '\\grace {\n'
+grace_notes_close = '}\n'
+tie = '~'
+beam_start = '['
+beam_stop = ']'
+slur_start = '('
+slur_stop = ')'
+articulation = '-{articulation}'
+dynamic = ' \\{dynamic}'
+fermata = ' \\fermata'
+text_above = ' ^"{text}"'
+text_below = ' _"{text}"'
+breathe = ' \\breathe'
+start_text_spanner = ' \\startTextSpan'
+stop_text_spanner = ' \\stopTextSpan'
+tempo_instruction = """ ^\\markup {{ \\override #\'(font-name . "Minion Italic") {{ "{tempo_instruction_text}" }} }}"""
+
+
+note = """{rehearsal}{bar}{time_signature}{text_spanner_init}{tempo_instruction_init}{grace_notes_init}{grace_notes}{grace_notes_close}{pitches}{duration}{tie}{beam}{slur}{articulations}{dynamic}{fermata}{text_above}{text_below}{breathe}{start_text_spanner}{stop_text_spanner}{tempo_instruction}\n"""
+
+grace_note = """{text_spanner_init_tab}{text_spanner_init}{tempo_instruction_init_tab}{tempo_instruction_init}{pitches_tab}{pitches}{duration}{tie}{beam}{slur}{articulations}{dynamic}{text_above}{text_below}{start_text_spanner}{stop_text_spanner}{tempo_instruction}\n"""
+
+page_start = '\\new Voice {\n\n'
+page_end = '\n\\bar "|."\n}'
