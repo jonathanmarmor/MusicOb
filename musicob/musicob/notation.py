@@ -194,7 +194,7 @@ class Piece(object):
             f.close()
    
    def write_ly(self, ly_dir, score=True, parts=True, midi=False):
-      ob2ly.ob2ly(self, ly_dir, score, parts, midi)
+      ob2ly.MakeLilyPond(self, ly_dir, score, parts, midi)
 
    def write_pdf(self, ly_dir, pdf_dir, score=True, parts=True):
       ly2pdf.ly2pdf(ly_dir, pdf_dir, self.filename, score, parts)

@@ -2,7 +2,6 @@
 
 import os
 import templates
-# from music_format import make_score_music_string
 
 
 def write_to_file(s, path=None, filename=None, extention=None, full_path=None):  
@@ -12,7 +11,7 @@ def write_to_file(s, path=None, filename=None, extention=None, full_path=None):
    f.write(s)
    f.close()
     
-def make_score(piece, ly_dir_path, midi_string): # templates)
+def make_score(piece, ly_dir_path, midi_string):
    main_string = templates.main.format(
                  title=piece.title,
                  composer=piece.composer,
@@ -254,24 +253,18 @@ def make_score_music_string(music):
 
 
 
-
-def ob2ly(piece, ly_dir_path, score=True, parts=False, midi=False): # template='emsis'   
-   if not midi:
-      midi_string = '%'
-   else:
-      midi_string = ' '
-           
-#    if template == 'standard':
-#        templates = standard
-#    elif template == 'emsis':
-#        templates = emsis
+class MakeLilyPond(object):
+   def __init__(self, piece, ly_dir_path, score=True, parts=False, midi=False):
+      if not midi:
+         midi_string = '%'
+      else:
+         midi_string = ' '
     
-   if score:
-      make_score(piece, ly_dir_path, midi_string) # templates)
-   if parts:
-      make_parts(piece, ly_dir_path, midi_string) # templates)
-
-
+      if score:
+         make_score(piece, ly_dir_path, midi_string)
+      if parts:
+         make_parts(piece, ly_dir_path, midi_string)
+      
    
 
 def test():
