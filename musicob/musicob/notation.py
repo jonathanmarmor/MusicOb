@@ -197,7 +197,7 @@ class Piece(object):
       ob2ly.MakeLilyPond(self, ly_dir, score, parts, midi)
 
    def write_pdf(self, ly_dir, pdf_dir, score=True, parts=True):
-      ly2pdf.ly2pdf(ly_dir, pdf_dir, self.filename, score, parts)
+      ly2pdf.LilyPondToPdf(ly_dir, pdf_dir, self.filename, score, parts)
 
 
 
