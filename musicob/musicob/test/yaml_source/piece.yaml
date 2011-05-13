@@ -2,13 +2,6 @@ title: Test Piece
 filename: test_piece
 composer: Jonathan Marmor
 emsis_number: 1234567
-musicians:
-  katie:
-  - mv1
-  - mv2
-  quentin:
-  - mv1
-  - mv2
 movements: 
   - movement_number: 1
     movement_folder_name: mv1

@@ -52,7 +52,7 @@ if __name__ == '__main__':
    parser.add_argument('ly_dir_path', help='path to input directory containing lilypond files')
    parser.add_argument('pdf_dir_path', help='path to output directory for pdf files')
    parser.add_argument('piece_filename', help='the filename of the piece')
-   parser.add_argument('-s', '--score', action='store_true', dest='score', help='make the score pdf file')
+   parser.add_argument('-s', '--score', action='store_true', dest='score', default=True, help='make the score pdf file')
    parser.add_argument('-p', '--parts', action='store_true', dest='parts', help='make the parts lilypond files')
    args = parser.parse_args()
 
