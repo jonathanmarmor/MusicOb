@@ -67,19 +67,23 @@ type the metadata into the piece.yaml file.
 >>> n.dynamic = 'f'
 
 Write YAML, LilyPond, PDF, and MIDI files of this little piece.
+
 >>> target = '/path/for/output'
 >>> p.write(target, yaml=True, ly=True, pdf=True, score=True, parts=True, midi=True)
 
 If you already have MusicOb YAML files, you can make LilyPond, PDF, 
 and MIDI files from the command line.
+
 $ python musicob/notation.py /path/to/yaml/files /path/for/output
 
 If you have MusicOb LilyPond files you can make PDF and MIDI files
 from the command line.
+
 $ python musicob/ly2pdf.py /path/to/lilypond/files /path/for/output
 piece_file_name --score --parts
 
 To run the doctests for notation.py:
+
 $ python musicob/notation.py musicob/test/yaml_source musicob/test/output --test
 
 
