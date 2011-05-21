@@ -34,7 +34,10 @@ A Minimal example of making a piece: one movement, one instrument, one
 note.  Normally you would probably generate the music algorithmicly and/or
 type the metadata into the piece.yaml file.
 
->>> from musicob import notation
+>>> import os
+>>> import notation
+>>> here = os.path.dirname(os.path.abspath(notation.__file__))
+>>> target = os.path.join(here, 'test', 'output')
 >>> p = notation.Piece()
 >>> p.title = 'The Star Spangled Banner'
 >>> p.composer = 'John Stafford Smith'
@@ -42,22 +45,21 @@ type the metadata into the piece.yaml file.
 >>> p.filename = 'star_spangled'
 >>> m = notation.Movement()
 >>> p.movements = [m]
->>> m.movement_title = 'The Only Movement'
->>> m.movement_number = 1
->>> m.movement_folder_name = 'mv1'
+>>> m.title = 'The Only Movement'
+>>> m.number = 1
+>>> m.folder = 'mv1'
 >>> m.tempo_duration = 4 # quarter note = 60
 >>> m.tempo_bpm = 60
 >>> i = notation.Instrument()
 >>> m.instruments = [i]
->>> i.instrument_name = 'Clarinet'
+>>> i.name = 'Clarinet'
 >>> i.musician = 'Katie'
->>> i.short_instrument_name = 'cl'
->>> i.midi_instrument_name = 'clarinet'
+>>> i.short_name = 'cl'
+>>> i.midi_name = 'clarinet'
 >>> i.clef = 'treble'
 >>> i.transpose_from_middle_c = "bes,"
->>> i.music_yaml_file_name = 'cl'
 >>> n = notation.Note()
->>> i.music = [n]
+>>> i.notation = [n]
 >>> n.pitches = "<d' >"
 >>> n.rehearsal_mark = 'A'
 >>> n.bar = 1
@@ -68,8 +70,7 @@ type the metadata into the piece.yaml file.
 
 Write YAML, LilyPond, PDF, and MIDI files of this little piece.
 
->>> target = '/path/for/output'
->>> p.write(target, yaml=True, ly=True, pdf=True, score=True, parts=True, midi=True)
+>>> paths = p.write(target, yaml=True, ly=True, pdf=True, score=True, parts=True, midi=True)
 
 If you already have MusicOb YAML files, you can make LilyPond, PDF, 
 and MIDI files from the command line.

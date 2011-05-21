@@ -71,12 +71,12 @@ class MusicObError(Exception):
 
 class Piece(object):
    def __init__(self, yaml_source=None):
-      if yaml_source:
+       if yaml_source:
          self.load(yaml_source)
 
-   def load(self, yaml_dir_path):
+   def load(self, yaml_dir):
       """Load the Piece data from YAML files."""
-      piece_path = os.path.join(yaml_dir_path, 'piece.yaml')
+      piece_path = os.path.join(yaml_dir, 'piece.yaml')
       f = open(piece_path, 'r')
       text = f.read()
       f.close()
@@ -92,21 +92,21 @@ class Piece(object):
       for movement in self.movements:
          for instrument in movement.instruments:
             music_yaml_file_path = os.path.join(
-               yaml_dir_path,
-               movement.movement_folder_name,
-               '{0}.yaml'.format(instrument.music_yaml_file_name)
+               yaml_dir,
+               movement.folder,
+               '{0}.yaml'.format(instrument.short_name)
             )
             if instrument.musician not in self.musicians:
                self.musicians[instrument.musician] = []
-            self.musicians[instrument.musician].append(movement.movement_folder_name)
+            self.musicians[instrument.musician].append(movement.folder)
             f = open(music_yaml_file_path, 'r')
             text = f.read()
             f.close()
             instrument_data = yaml.load(text)
-            instrument.music = []
+            instrument.notation = []
             for n in instrument_data:
                note = Note(n)
-               instrument.music.append(note)
+               instrument.notation.append(note)
 
    def make_musicians_movements(self):
       self.musicians = {}
@@ -114,7 +114,7 @@ class Piece(object):
          for i in m.instruments:
             if i.musician not in self.musicians:
                self.musicians[i.musician] = []
-            self.musicians[i.musician].append(m.movement_folder_name)
+            self.musicians[i.musician].append(m.folder)
 
    def write(self, target, yaml=False, ly=False, pdf=True, score=True, parts=True, midi=False):
       self.make_musicians_movements()
@@ -159,7 +159,7 @@ class Piece(object):
          d['movements'].append(m.dump())
       return d
 
-   def write_yaml(self, yaml_dir_path):
+   def write_yaml(self, yaml_dir):
       """Write dictionary created by self.dump() to a set of YAML files.
 
       Files are organized for easy manual editing:
@@ -170,26 +170,26 @@ class Piece(object):
 
       """
       piece_dict = self.dump()
-      piece_path = os.path.join(yaml_dir_path, 'piece.yaml')
+      piece_path = os.path.join(yaml_dir, 'piece.yaml')
       for mi, m in zip(range(len(self.movements)), self.movements):
          for i in range(len(m.instruments)): 
-            del piece_dict['movements'][mi]['instruments'][i]['music']
+            del piece_dict['movements'][mi]['instruments'][i]['notation']
       f = open(piece_path, 'w')
       yaml.dump(piece_dict, f, default_flow_style=False)
       f.close()
       for m in self.movements:
-         movement_folder_path = os.path.join(yaml_dir_path, m.movement_folder_name)
+         movement_folder_path = os.path.join(yaml_dir, m.folder)
          os.mkdir(movement_folder_path)
          for i in m.instruments:
-            music_list = []
-            for note in i.music:
-               music_list.append(note.dump())
+            notation_list = []
+            for note in i.notation:
+               notation_list.append(note.dump())
             instrument_file_path = os.path.join(
                movement_folder_path, 
-               '{}.yaml'.format(i.music_yaml_file_name)
+               '{}.yaml'.format(i.short_name)
             )    
             f = open(instrument_file_path, 'w')
-            yaml.dump(music_list, f, default_flow_style=False)
+            yaml.dump(notation_list, f, default_flow_style=False)
             f.close()
    
    def write_ly(self, ly_dir, score=True, parts=True, midi=False):
@@ -206,9 +206,9 @@ class Movement(object):
          self.load(yaml_data)
 
    def load(self, yaml_data):
-      self.movement_number = yaml_data['movement_number']
-      self.movement_folder_name = yaml_data['movement_folder_name']
-      self.movement_title = yaml_data['movement_title']
+      self.number = yaml_data['number']
+      self.folder = yaml_data['folder']
+      self.title = yaml_data['title']
       self.tempo_duration = yaml_data['tempo_duration']
       self.tempo_bpm = yaml_data['tempo_bpm']
       self.instruments = []
@@ -229,19 +229,19 @@ class Instrument(object):
          self.load(yaml_data)
 
    def load(self, yaml_data):
-      self.instrument_name = yaml_data['instrument_name']
+      self.name = yaml_data['name']
       self.musician = yaml_data['musician']
-      self.short_instrument_name = yaml_data['short_instrument_name']
-      self.midi_instrument_name = yaml_data['midi_instrument_name']
+      self.short_name = yaml_data['short_name']
+      self.midi_name = yaml_data['midi_name']
       self.clef = yaml_data['clef']
       self.transpose_from_middle_c = yaml_data['transpose_from_middle_c']
-      self.music_yaml_file_name = yaml_data['music_yaml_file_name']
+#      self.music_yaml_file_name = yaml_data['music_yaml_file_name']
 
    def dump(self):
       d = self.__dict__.copy()
-      d['music'] = []
-      for note in self.music:
-         d['music'].append(note.dump())
+      d['notation'] = []
+      for note in self.notation:
+         d['notation'].append(note.dump())
       return d
 
 
@@ -295,64 +295,64 @@ class Note(object):
 
 
 class MakeLilyPond(object):
-   def __init__(self, piece, ly_dir_path, score=True, parts=False, midi=False):
+   def __init__(self, piece, ly_dir, score=True, parts=False, midi=False):
       if not midi:
          midi_string = '%'
       else:
          midi_string = ' '
     
       if score:
-         self.make_score(piece, ly_dir_path, midi_string)
+         self.make_score(piece, ly_dir, midi_string)
       if parts:
-         self.make_parts(piece, ly_dir_path, midi_string)
+         self.make_parts(piece, ly_dir, midi_string)
       
 
-   def make_score(self, piece, ly_dir_path, midi_string):
+   def make_score(self, piece, ly_dir, midi_string):
       main_string = templates.main.format(
                     title=piece.title,
                     composer=piece.composer,
                     emsis_number=piece.emsis_number,
                     staff_size=15)
       strings = [main_string]
-      score_music_dir = os.path.join(ly_dir_path, 'score_music')
+      score_music_dir = os.path.join(ly_dir, 'score_music')
       os.mkdir(score_music_dir)
       for movement in piece.movements:
-         mv_num = movement.movement_number
-         movement_dir = os.path.join(score_music_dir, movement.movement_folder_name)
+         mv_num = movement.number
+         movement_dir = os.path.join(score_music_dir, movement.folder)
          os.mkdir(movement_dir)
          movement_string = templates.movement.format(
-                           movement_title=movement.movement_title,
+                           title=movement.title,
                            tempo_duration=movement.tempo_duration,
                            tempo_bpm=movement.tempo_bpm,
-                           movement_number=movement.movement_number,
-                           instrument_name='')
+                           number=movement.number,
+                           name='')
          strings.append(movement_string)
          for instrument in movement.instruments:      
             instrument_string = templates.instrument.format(
-               instrument_name=instrument.instrument_name,
-               short_instrument_name=instrument.short_instrument_name,
-               midi_instrument_name=instrument.midi_instrument_name,
+               name=instrument.name,
+               short_name=instrument.short_name,
+               midi_name=instrument.midi_name,
                clef=instrument.clef,
                transpose_from_middle_c='c')
             strings.append(instrument_string)
-            music_ly_filename = '{}_music.ly'.format(instrument.music_yaml_file_name)
+            music_ly_filename = '{}_music.ly'.format(instrument.short_name)
             music_ly_file_path = os.path.join(movement_dir, music_ly_filename)
             relative_music_ly_file_path = os.path.join('.',
                                                        'score_music',
-                                                       movement.movement_folder_name,
+                                                       movement.folder,
                                                        music_ly_filename)            
             instrument_end_string = templates.instrument_end.format(path_to_music_file=relative_music_ly_file_path)
             strings.append(instrument_end_string)
-            music_string = self.make_score_music_string(instrument.music)
-            self.write_to_file(music_string, full_path=music_ly_file_path)  
+            notation_string = self.make_score_music_string(instrument.notation)
+            self.write_to_file(notation_string, full_path=music_ly_file_path)  
          movement_end_string = templates.movement_end.format(midi=midi_string)
          strings.append(movement_end_string)        
       strings.append(templates.main_end.format())
       score_string = ''.join(strings)
-      self.write_to_file(score_string, ly_dir_path, piece.filename, 'ly')
+      self.write_to_file(score_string, ly_dir, piece.filename, 'ly')
 
-   def make_parts(self, piece, ly_dir_path, midi_string): # templates)
-      parts_music_dir = os.path.join(ly_dir_path, 'parts_music')
+   def make_parts(self, piece, ly_dir, midi_string): # templates)
+      parts_music_dir = os.path.join(ly_dir, 'parts_music')
       os.mkdir(parts_music_dir)  
       for musician in piece.musicians:
          musician_dir = os.path.join(parts_music_dir, musician)
@@ -366,30 +366,30 @@ class MakeLilyPond(object):
             for instrument in movement.instruments:
                if instrument.musician == musician:
                   movement_string = templates.movement.format(
-                     movement_title=movement.movement_title,
+                     title=movement.title,
                      tempo_duration=movement.tempo_duration,
                      tempo_bpm=movement.tempo_bpm,
-                     movement_number=movement.movement_number,
-                     instrument_name=musician)
+                     number=movement.number,
+                     name=musician)
                   strings.append(movement_string)
                     
                   instrument_string = templates.instrument.format(
-                     instrument_name=instrument.instrument_name,
-                     short_instrument_name=instrument.short_instrument_name,
-                     midi_instrument_name=instrument.midi_instrument_name,
+                     name=instrument.name,
+                     short_name=instrument.short_name,
+                     midi_name=instrument.midi_name,
                      clef=instrument.clef,
                      transpose_from_middle_c=instrument.transpose_from_middle_c)
                   strings.append(instrument_string)
                     
-                  music_ly_filename = '{}_music.ly'.format(movement.movement_folder_name)
+                  music_ly_filename = '{}_music.ly'.format(movement.folder)
                   music_ly_file_path = os.path.join(musician_dir, music_ly_filename)
                   relative_music_ly_file_path = os.path.join('.', 'parts_music', musician, music_ly_filename)            
                     
                   instrument_end_string = templates.instrument_end.format(path_to_music_file=relative_music_ly_file_path)
                   strings.append(instrument_end_string)
                     
-                  music_string = self.make_score_music_string(instrument.music)
-                  self.write_to_file(music_string, full_path=music_ly_file_path)
+                  notation_string = self.make_score_music_string(instrument.notation)
+                  self.write_to_file(notation_string, full_path=music_ly_file_path)
                else:
                   pass
                   # what should be done when an instrument isn't playing in a movement?    
@@ -397,7 +397,7 @@ class MakeLilyPond(object):
             strings.append(movement_end_string)
          strings.append(templates.main_end.format())
          parts_string = ''.join(strings)
-         self.write_to_file(parts_string, ly_dir_path, musician, 'ly')
+         self.write_to_file(parts_string, ly_dir, musician, 'ly')
 
 
    def write_to_file(self, s, path=None, filename=None, extention=None, full_path=None):  
@@ -455,8 +455,9 @@ class MakeLilyPond(object):
          d['bar'] = ''
           
       if note.time_signature_numerator:
-         d['time_signature'] = templates.time_signature.format(numerator=note.time_signature_numerator, 
-                                                             denominator=note.time_signature_denominator)
+         d['time_signature'] = templates.time_signature.format(
+            numerator=note.time_signature_numerator,
+            denominator=note.time_signature_denominator)
       else:
          d['time_signature'] = ''
           
@@ -551,9 +552,12 @@ class MakeLilyPond(object):
 
 
 
-def _test():
+def _test(args):
    import doctest
-   doctest.testmod()
+   if args.test or args.test_notation:
+      doctest.testmod()
+   if args.test or args.test_readme:
+      doctest.testfile('README.rst')
 
 def main():
    import argparse
@@ -562,11 +566,13 @@ def main():
 
    parser.add_argument('source', help='Path to input directory containing YAML files.')
    parser.add_argument('target', help='Path to write PDF and LilyPond files.')
-   parser.add_argument('-t', '--test', action='store_true', dest='test', help='Run doctest.testmod().')
+   parser.add_argument('-t', '--test', action='store_true', dest='test', help='Test all examples.')
+   parser.add_argument('--testreadme', action='store_true', dest='test_readme', help="Test examples in README.rst.")
+   parser.add_argument('--testnotation', action='store_true', dest='test_notation', help="Test examples in notation.py.")
    args = parser.parse_args()
 
-   if args.test:
-      _test()
+   if args.test or args.test_readme or args.test_notation:
+      _test(args)
    else:
       p = Piece(args.source)
       paths = p.write(args.target, yaml=False, ly=True, pdf=True, score=True, parts=True, midi=True)

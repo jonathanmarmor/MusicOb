@@ -188,8 +188,8 @@ main_end = """}}"""
 movement = """
 	\\bookpart {{
 		\\header {{ 
-			movementtitle = "{movement_title}" 
-			instrumentname = "{instrument_name}"
+			movementtitle = "{title}" 
+			instrumentname = "{name}"
 		}}
 		\\score {{
 			<<
@@ -211,9 +211,9 @@ movement_end = """
 instrument = """
 			\\new Staff {{
 				\\numericTimeSignature
-				\\set Staff.instrumentName = \\markup {{ \\override #'(font-name . "Granjon Bold") {{ "{instrument_name}" }} }}
-				\\set Staff.shortInstrumentName = \\markup {{ \\override #'(font-name . "Granjon Bold") {{ \\hcenter-in #5 "{short_instrument_name}" }} }}
-				\\set Staff.midiInstrument = #"{midi_instrument_name}"
+				\\set Staff.instrumentName = \\markup {{ \\override #'(font-name . "Granjon Bold") {{ "{name}" }} }}
+				\\set Staff.shortInstrumentName = \\markup {{ \\override #'(font-name . "Granjon Bold") {{ \\hcenter-in #5 "{short_name}" }} }}
+				\\set Staff.midiInstrument = #"{midi_name}"
 				\\set Staff.extraNatural = ##f
 				\\clef {clef}
 				\\override TextScript #'staff-padding = #2.0
