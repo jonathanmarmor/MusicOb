@@ -1,0 +1,48 @@
+composer: Jonathan Marmor
+emsis_number: 1234567
+filename: test_piece
+movements:
+- folder: mv1
+  instruments:
+  - clef: treble
+    midi_name: clarinet
+    musician: katie
+    name: Clarinet
+    short_name: cl
+    transpose_from_middle_c: bes,
+  - clef: treble
+    midi_name: acoustic grand
+    musician: quentin
+    name: Piano
+    short_name: pn
+    transpose_from_middle_c: c
+  number: 1
+  tempo_bpm: 60
+  tempo_duration: 4
+  title: Amsterdam
+- folder: mv2
+  instruments:
+  - clef: treble
+    midi_name: clarinet
+    musician: katie
+    name: Clarinet
+    short_name: cl
+    transpose_from_middle_c: bes,
+  - clef: treble
+    midi_name: acoustic grand
+    musician: quentin
+    name: Piano
+    short_name: pn
+    transpose_from_middle_c: c
+  number: 2
+  tempo_bpm: 85
+  tempo_duration: 4
+  title: Beirut
+musicians:
+  katie:
+  - mv1
+  - mv2
+  quentin:
+  - mv1
+  - mv2
+title: Test Piece

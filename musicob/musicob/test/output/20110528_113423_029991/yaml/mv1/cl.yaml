@@ -1,0 +1,7 @@
+- bar: 1
+  duration: 1
+  dynamic: f
+  pitches: <d' >
+  rehearsal_mark: A
+  time_signature_denominator: 4
+  time_signature_numerator: 4

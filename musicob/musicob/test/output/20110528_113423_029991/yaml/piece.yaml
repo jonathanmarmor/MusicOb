@@ -1,0 +1,20 @@
+composer: John Stafford Smith
+emsis_number: 12345
+filename: star_spangled
+movements:
+- folder: mv1
+  instruments:
+  - clef: treble
+    midi_name: clarinet
+    musician: Katie
+    name: Clarinet
+    short_name: cl
+    transpose_from_middle_c: bes,
+  number: 1
+  tempo_bpm: 60
+  tempo_duration: 4
+  title: The Only Movement
+musicians:
+  Katie:
+  - mv1
+title: The Star Spangled Banner
