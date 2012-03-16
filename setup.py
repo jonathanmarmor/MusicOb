@@ -13,5 +13,5 @@ setup(
    author_email='jmarmor@gmail.com',
    zip_safe=False,
    install_requires=['PyYaml'],
-   packages = ['musicob']
-   )
+   packages=['musicob']
+)
