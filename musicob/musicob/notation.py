@@ -47,7 +47,7 @@ notation.py
 Traceback (most recent call last):
    ...
 TypeError: write() takes at least 2 arguments (1 given)
-    
+
 >>> paths = piece.write(target, pdf=False) # raises an exception
 Traceback (most recent call last):
    ...
@@ -132,7 +132,7 @@ class Piece(object):
          paths['yaml'] = yaml_dir
       if ly or pdf:
          ly_dir = os.path.join(target, 'ly')
-         os.mkdir(ly_dir)         
+         os.mkdir(ly_dir)
          paths['ly'] = ly_dir
          self.write_ly(ly_dir, score=score, parts=parts, midi=midi)
          if pdf:
@@ -152,7 +152,7 @@ class Piece(object):
       Appropriate for serialization as YAML.
 
       """
-      
+
       d = self.__dict__.copy()
       d['movements'] = []
       for m in self.movements:
@@ -172,7 +172,7 @@ class Piece(object):
       piece_dict = self.dump()
       piece_path = os.path.join(yaml_dir, 'piece.yaml')
       for mi, m in zip(range(len(self.movements)), self.movements):
-         for i in range(len(m.instruments)): 
+         for i in range(len(m.instruments)):
             del piece_dict['movements'][mi]['instruments'][i]['notation']
       f = open(piece_path, 'w')
       yaml.dump(piece_dict, f, default_flow_style=False)
@@ -185,13 +185,13 @@ class Piece(object):
             for note in i.notation:
                notation_list.append(note.dump())
             instrument_file_path = os.path.join(
-               movement_folder_path, 
+               movement_folder_path,
                '{}.yaml'.format(i.short_name)
-            )    
+            )
             f = open(instrument_file_path, 'w')
             yaml.dump(notation_list, f, default_flow_style=False)
             f.close()
-   
+
    def write_ly(self, ly_dir, score=True, parts=True, midi=False):
       MakeLilyPond(self, ly_dir, score, parts, midi)
 
@@ -220,9 +220,9 @@ class Movement(object):
       d['instruments'] = []
       for i in self.instruments:
          d['instruments'].append(i.dump())
-      return d            
+      return d
 
-            
+
 class Instrument(object):
    def __init__(self, yaml_data=False):
       if yaml_data:
@@ -281,7 +281,7 @@ class Note(object):
                self.grace_notes.append(grace)
          else:
             self.__setattr__(prop, yaml_data[prop])
-                
+
    def dump(self):
       d = {}
       for prop in self.__dict__:
@@ -300,12 +300,12 @@ class MakeLilyPond(object):
          midi_string = '%'
       else:
          midi_string = ' '
-    
+
       if score:
          self.make_score(piece, ly_dir, midi_string)
       if parts:
          self.make_parts(piece, ly_dir, midi_string)
-      
+
 
    def make_score(self, piece, ly_dir, midi_string):
       main_string = templates.main.format(
@@ -327,7 +327,7 @@ class MakeLilyPond(object):
                            number=movement.number,
                            name='')
          strings.append(movement_string)
-         for instrument in movement.instruments:      
+         for instrument in movement.instruments:
             instrument_string = templates.instrument.format(
                name=instrument.name,
                short_name=instrument.short_name,
@@ -340,20 +340,20 @@ class MakeLilyPond(object):
             relative_music_ly_file_path = os.path.join('.',
                                                        'score_music',
                                                        movement.folder,
-                                                       music_ly_filename)            
+                                                       music_ly_filename)
             instrument_end_string = templates.instrument_end.format(path_to_music_file=relative_music_ly_file_path)
             strings.append(instrument_end_string)
             notation_string = self.make_score_music_string(instrument.notation)
-            self.write_to_file(notation_string, full_path=music_ly_file_path)  
+            self.write_to_file(notation_string, full_path=music_ly_file_path)
          movement_end_string = templates.movement_end.format(midi=midi_string)
-         strings.append(movement_end_string)        
+         strings.append(movement_end_string)
       strings.append(templates.main_end.format())
       score_string = ''.join(strings)
       self.write_to_file(score_string, ly_dir, piece.filename, 'ly')
 
    def make_parts(self, piece, ly_dir, midi_string): # templates)
       parts_music_dir = os.path.join(ly_dir, 'parts_music')
-      os.mkdir(parts_music_dir)  
+      os.mkdir(parts_music_dir)
       for musician in piece.musicians:
          musician_dir = os.path.join(parts_music_dir, musician)
          os.mkdir(musician_dir)
@@ -372,7 +372,7 @@ class MakeLilyPond(object):
                      number=movement.number,
                      name=musician)
                   strings.append(movement_string)
-                    
+
                   instrument_string = templates.instrument.format(
                      name=instrument.name,
                      short_name=instrument.short_name,
@@ -380,27 +380,29 @@ class MakeLilyPond(object):
                      clef=instrument.clef,
                      transpose_from_middle_c=instrument.transpose_from_middle_c)
                   strings.append(instrument_string)
-                    
+
                   music_ly_filename = '{}_music.ly'.format(movement.folder)
                   music_ly_file_path = os.path.join(musician_dir, music_ly_filename)
-                  relative_music_ly_file_path = os.path.join('.', 'parts_music', musician, music_ly_filename)            
-                    
+                  relative_music_ly_file_path = os.path.join('.', 'parts_music', musician, music_ly_filename)
+
                   instrument_end_string = templates.instrument_end.format(path_to_music_file=relative_music_ly_file_path)
                   strings.append(instrument_end_string)
-                    
+
                   notation_string = self.make_score_music_string(instrument.notation)
                   self.write_to_file(notation_string, full_path=music_ly_file_path)
+
+                  movement_end_string = templates.movement_end.format(midi=midi_string)
+                  strings.append(movement_end_string)
                else:
                   pass
-                  # what should be done when an instrument isn't playing in a movement?    
-            movement_end_string = templates.movement_end.format(midi=midi_string)
-            strings.append(movement_end_string)
+                  # what should be done when an instrument isn't playing in a movement?
+
          strings.append(templates.main_end.format())
          parts_string = ''.join(strings)
          self.write_to_file(parts_string, ly_dir, musician, 'ly')
 
 
-   def write_to_file(self, s, path=None, filename=None, extention=None, full_path=None):  
+   def write_to_file(self, s, path=None, filename=None, extention=None, full_path=None):
       if not full_path:
          full_path = os.path.join(path, '{0}.{1}'.format(filename, extention))
       f = open(full_path, 'w')
@@ -415,7 +417,7 @@ class MakeLilyPond(object):
          music_string_list.append(note_string)
       music_string_list.append(templates.page_end)
       music_string = ''.join(music_string_list)
-      return music_string    
+      return music_string
 
    def format_note(self, note):
       d = self.get_format_dict(note)
@@ -426,11 +428,11 @@ class MakeLilyPond(object):
       if note.text_spanner_start:
          d['text_spanner_init_tab'] = '\t'
       else:
-         d['text_spanner_init_tab'] = ''    
+         d['text_spanner_init_tab'] = ''
       if note.tempo_instruction:
          d['tempo_instruction_init_tab'] = '\t'
       else:
-         d['tempo_instruction_init_tab'] = ''       
+         d['tempo_instruction_init_tab'] = ''
       d['pitches_tab'] = '\t'
       return templates.grace_note.format(**d)
 
@@ -443,43 +445,43 @@ class MakeLilyPond(object):
 
    def get_format_dict(self, note):
       d = {}
-   
+
       if note.rehearsal_mark:
          d['rehearsal'] = templates.rehearsal.format(rehearsal_text=note.rehearsal_mark)
       else:
          d['rehearsal'] = ''
-          
+
       if note.bar:
          d['bar'] = templates.bar.format(bar_number=note.bar)
       else:
          d['bar'] = ''
-          
+
       if note.time_signature_numerator:
          d['time_signature'] = templates.time_signature.format(
             numerator=note.time_signature_numerator,
             denominator=note.time_signature_denominator)
       else:
          d['time_signature'] = ''
-          
+
       if note.text_spanner_start:
          d['text_spanner_init'] = templates.text_spanner_init.format(text_spanner_text=note.text_spanner_start)
          d['start_text_spanner'] = templates.start_text_spanner
       else:
          d['text_spanner_init'] = ''
          d['start_text_spanner'] = ''
-          
+
       if note.text_spanner_stop:
          d['stop_text_spanner'] = templates.stop_text_spanner
       else:
          d['stop_text_spanner'] = ''
-          
+
       if note.tempo_instruction:
          d['tempo_instruction_init'] = templates.tempo_instruction_init
          d['tempo_instruction'] = templates.tempo_instruction.format(tempo_instruction_text=note.tempo_instruction)
       else:
          d['tempo_instruction_init'] = ''
          d['tempo_instruction'] = ''
-          
+
       if note.grace_notes:
          d['grace_notes_init'] = templates.grace_notes_init
          grace_list = []
@@ -488,63 +490,63 @@ class MakeLilyPond(object):
              grace_list.append(grace_string)
          d['grace_notes'] = ''.join(grace_list)
          d['grace_notes_close'] = templates.grace_notes_close
-      else:     
+      else:
          d['grace_notes_init'] = ''
          d['grace_notes'] = ''
          d['grace_notes_close'] = ''
-      
+
       d['pitches'] = note.pitches
       d['duration'] = note.duration
-      
+
       if note.tie:
          d['tie'] = templates.tie
       else:
          d['tie'] = ''
-      
+
       if note.beam == 'start':
          d['beam'] = templates.beam_start
       elif note.beam == 'stop':
          d['beam'] = templates.beam_stop
       else:
          d['beam'] = ''
-      
+
       if note.slur == 'start':
          d['slur'] = templates.slur_start
       elif note.slur == 'stop':
          d['slur'] = templates.slur_stop
       else:
          d['slur'] = ''
-      
+
       if note.articulations:
          d['articulations'] = self.format_articulations(note.articulations)
       else:
          d['articulations'] = ''
-      
+
       if note.dynamic:
-         d['dynamic'] = templates.dynamic.format(dynamic=note.dynamic)   
+         d['dynamic'] = templates.dynamic.format(dynamic=note.dynamic)
       else:
          d['dynamic'] = ''
-      
+
       if note.fermata:
          d['fermata'] = templates.fermata
       else:
          d['fermata'] = ''
-      
+
       if note.text_above:
          d['text_above'] = templates.text_above.format(text=note.text_above)
       else:
          d['text_above'] = ''
-      
+
       if note.text_below:
          d['text_below'] = templates.text_below.format(text=note.text_below)
       else:
          d['text_below'] = ''
-      
+
       if note.breathe:
          d['breathe'] = templates.breathe
       else:
          d['breathe'] = ''
-          
+
       return d
 
 

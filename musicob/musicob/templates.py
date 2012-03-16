@@ -21,7 +21,7 @@ main = """\\version "2.12.3"
 	after-title-space = 0.0\\in
 	between-title-space = 0.0\\in
 %	horizontal-shift = 0.0\\in
-%	between-system-padding = 7\\cm % forces one system per page when staff size is 20 
+%	between-system-padding = 7\\cm % forces one system per page when staff size is 20
     between-system-padding = 4\\mm % Default is 4mm
 %	between-system-padding = #1
 %	between-system-space = 3\\cm %#30 Changing this doesn't appear to do anything
@@ -30,20 +30,20 @@ main = """\\version "2.12.3"
 	first-page-number = 3
 	print-first-page-number = ##t
 
-	bookTitleMarkup = \\markup {{	
+	bookTitleMarkup = \\markup {{
 		\\column {{
 			\\fill-line {{
 				\\line {{
-					\\override #'(font-name . "Granjon") 
-					\\override #'(font-size . 12) 
+					\\override #'(font-name . "Granjon")
+					\\override #'(font-size . 12)
 					{{ \\fromproperty #'header:maintitle }}
-				}}				
+				}}
 			}}
 			\\fill-line {{
 				\\line {{ \\null }}
 				\\line {{ \\null }}
 				\\line {{
-					\\override #'(font-name . "Granjon Bold") 
+					\\override #'(font-name . "Granjon Bold")
 					{{ \\fromproperty #'header:thecomposer }}
 				}}
 			}}
@@ -54,9 +54,9 @@ main = """\\version "2.12.3"
 			\\fill-line {{
 				\\line {{
 					\\override #'(font-name . "Granjon Bold")
-					\\override #'(font-size . 10) 
+					\\override #'(font-size . 10)
 					{{ \\fromproperty #'header:movementtitle }}
-				}}				
+				}}
 			}}
 			\\line {{ \\null }}
 		}}
@@ -65,21 +65,21 @@ main = """\\version "2.12.3"
 		\\on-the-fly #not-first-page {{
 			\\column {{
 				\\fill-line {{
-					{{ 
+					{{
 						\\override #'(font-name . "Granjon Bold")
 						\\override #'(font-size . 1)
 						{{ " " }}
 					}}
-					{{ 
+					{{
 						\\override #'(font-name . "Granjon Bold")
 						\\override #'(font-size . 2)
 						{{ \\fromproperty #'header:instrumentname }}
 					}}
-					{{ 
+					{{
 						\\override #'(font-name . "Granjon Bold")
 						\\override #'(font-size . 1)
 						{{ \\on-the-fly #print-page-number-check-first \\fromproperty #'page:page-number-string }}
-					}}						
+					}}
 				}}
 %				\\line {{ \\null }}
 				\\line {{ \\null }}
@@ -99,21 +99,21 @@ main = """\\version "2.12.3"
 		\\on-the-fly #not-first-page {{
 			\\column {{
 				\\fill-line {{
-					{{ 
+					{{
 						\\override #'(font-name . "Granjon Bold")
 						\\override #'(font-size . 1)
 						{{ \\on-the-fly #print-page-number-check-first \\fromproperty #'page:page-number-string }}
 					}}
-					{{ 
+					{{
 						\\override #'(font-name . "Granjon Bold")
 						\\override #'(font-size . 2)
 						{{ \\fromproperty #'header:instrumentname }}
 					}}
-					{{ 
+					{{
 						\\override #'(font-name . "Granjon Bold")
 						\\override #'(font-size . 1)
 						{{ " " }}
-					}}						
+					}}
 				}}
 %				\\line {{ \\null }}
 				\\line {{ \\null }}
@@ -129,13 +129,13 @@ main = """\\version "2.12.3"
 			\\line {{ \\null }}
 		}}
 	}}
-	oddFooterMarkup = \\markup {{ 
+	oddFooterMarkup = \\markup {{
 		\\on-the-fly #first-page {{
 			\\fill-line {{
 				\\column {{
 					%\\line {{ \\null }}
 					\\line {{ \\null }}
-					\\line {{ \\override #'(font-name . "Granjon Bold") {{ \\char ##x00A9 "2010 \xc3\x89ditions musique SISYPHE" }} }}
+					\\line {{ \\override #'(font-name . "Granjon Bold") {{ \\char ##x00A9 "2012 \xc3\x89ditions musique SISYPHE" }} }}
 					\\line {{ \\override #'(font-name . "Granjon Bold") {{ "Vancouver, Canada" }} }}
 					\\line {{ \\override #'(font-name . "Granjon Bold") {{ "emsis.ca" }} }}
 				}}
@@ -153,7 +153,7 @@ main = """\\version "2.12.3"
 					\\line {{ \\override #'(font-name . "Granjon Bold") {{ "All rights reserved all countries" }} }}
 					\\line {{ \\override #'(font-name . "Granjon Bold") {{ "Imprim\xc3\xa9 au Canada - Printed in Canada" }} }}
 				}}
-			}}				
+			}}
 		}}
 		\\column {{
 			%\\line {{ \\null }}
@@ -163,7 +163,7 @@ main = """\\version "2.12.3"
 			\\fill-line {{ \\override #'(font-name . "Granjon Bold") {{ "EMSIS no. {emsis_number}" }} }}
 		}}
 	}}
-	evenFooterMarkup = \\markup {{ 
+	evenFooterMarkup = \\markup {{
 		\\column {{
 			%\\line {{ \\null }}
 			\\line {{ \\null }}
@@ -175,7 +175,7 @@ main = """\\version "2.12.3"
 }}
 
 \\book {{
-	\\header {{ 
+	\\header {{
 		maintitle = "{title}"
 		thecomposer = "{composer}"
 		tagline = ""
@@ -187,19 +187,19 @@ main_end = """}}"""
 
 movement = """
 	\\bookpart {{
-		\\header {{ 
-			movementtitle = "{title}" 
+		\\header {{
+			movementtitle = "{title}"
 			instrumentname = "{name}"
 		}}
 		\\score {{
 			<<
-				\\set Score.autoBeaming = ##f
+				\\set Score.autoBeaming = ##t
 				#(set-accidental-style 'modern 'Score)
 				\\override Score.Stem #'stemlet-length = #0.75
 				\\override Score.PaperColumn #'keep-inside-line = ##t
 				\\tempo {tempo_duration} = {tempo_bpm}
 """
-			
+
 movement_end = """
 			>>
 			\\layout {{ }}
