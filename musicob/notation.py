@@ -256,7 +256,7 @@ class Note(object):
       self.bar = None
       self.time_signature_numerator = None
       self.time_signature_denominator = None
-      self.pitches = None
+      self.raw_pitches = None
       self.duration = None
       self.tie = False
       self.dynamic = None
@@ -292,6 +292,14 @@ class Note(object):
             for g in self.grace_notes:
                d['grace_notes'].append(g.dump())
       return d
+
+   @property
+   def pitches(self):
+      if self.raw_pitches:
+        pitches = [p.ly for p in self.raw_pitches]
+        return '<' + ' '.join(pitches) + ' >'
+      else:
+         return 'r'
 
 
 class MakeLilyPond(object):
